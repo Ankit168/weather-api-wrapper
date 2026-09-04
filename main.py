@@ -12,14 +12,27 @@ from slowapi.util import get_remote_address
 load_dotenv()
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-redis_client = redis.Redis(host="localhost",
-                           port=6379,
-                           decode_responses=True)
+REDIS_URL = os.getenv(
+    "REDIS_URL",
+    "redis://localhost:6379/0",
+)
+
+redis_client = redis.Redis.from_url(
+    REDIS_URL,
+    decode_responses=True,
+)
+
+# redis_client = redis.Redis(host="localhost",
+#                            port=6379,
+#                            decode_responses=True) 
+#above section is used when it is hosting on local
+
 app = FastAPI()
 
 limiter = Limiter(
     key_func=get_remote_address,
-    storage_uri="redis://localhost:6379",
+    # storage_uri="redis://localhost:6379",   it is used to run on local
+    storage_uri=REDIS_URL,    #it's been used for deploying
 )
 
 app.state.limiter = limiter
@@ -27,6 +40,10 @@ app.add_exception_handler(
     RateLimitExceeded,
     _rate_limit_exceeded_handler,
 )
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 @app.get("/weather")
 @limiter.limit("10/minute")
