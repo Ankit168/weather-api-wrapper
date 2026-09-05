@@ -43,6 +43,7 @@ Open interactive documentation:
 
 ```text
 http://127.0.0.1:8000/docs
+https://weather-api-wrapper-yroh.onrender.com/
 ```
 
 Example requests:
