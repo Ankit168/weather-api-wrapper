@@ -11,6 +11,10 @@ A FastAPI service that fetches current weather data from OpenWeatherMap.
 - Input and provider-error handling
 - Interactive API documentation at `/docs`
 
+```Project URL
+https://roadmap.sh/projects/weather-api-wrapper-service
+```
+
 ## Setup
 
 ```bash
